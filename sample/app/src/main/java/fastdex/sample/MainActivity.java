@@ -74,6 +74,10 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
 
+        if (true) {
+            //throw new RuntimeException("ss");
+        }
+
 
         StringBuilder sb = new StringBuilder();
         sb.append(JavaLib.str);
@@ -86,7 +90,7 @@ public class MainActivity extends Activity {
 //        sb.append("\n");
         sb.append(getResources().getString(commonstr));
         sb.append("\n");
-        sb.append("4545");
+        sb.append("6");
 
         Log.d(TAG,"sb: \n" + sb.toString());
         Toast.makeText(this, sb.toString(),Toast.LENGTH_LONG).show();
@@ -97,6 +101,7 @@ public class MainActivity extends Activity {
 
             }
         };
+
 
         //SampleApplication realApp = (SampleApplication)getApplication();
 

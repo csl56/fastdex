@@ -16,6 +16,7 @@ import org.gradle.api.tasks.TaskAction
 public class FastdexManifestTask extends DefaultTask {
     static final String MANIFEST_XML = "AndroidManifest.xml"
     static final String FASTDEX_ORIGIN_APPLICATION_CLASSNAME = "FASTDEX_ORIGIN_APPLICATION_CLASSNAME"
+    static final String INSTANT_RUN_SERVICE = "fastdex.runtime.InstantRunService"
 
     FastdexVariant fastdexVariant
 
@@ -41,7 +42,7 @@ public class FastdexManifestTask extends DefaultTask {
             def metaDataTags = application['meta-data']
 
             // remove any old FASTDEX_ORIGIN_APPLICATION_CLASSNAME elements
-            def originApplicationName = metaDataTags.findAll {
+            metaDataTags.findAll {
                 it.attributes()[ns.name].equals(FASTDEX_ORIGIN_APPLICATION_CLASSNAME)
             }.each {
                 it.parent().remove(it)
@@ -50,12 +51,20 @@ public class FastdexManifestTask extends DefaultTask {
             // Add the new FASTDEX_ORIGIN_APPLICATION_CLASSNAME element
             application.appendNode('meta-data', [(ns.name): FASTDEX_ORIGIN_APPLICATION_CLASSNAME, (ns.value): applicationName])
 
+
+            application['service'].findAll {
+                it.attributes()[ns.name].equals(INSTANT_RUN_SERVICE)
+            }.each {
+                it.parent().remove(it)
+            }
+            application.appendNode('service', [(ns.name): INSTANT_RUN_SERVICE, (ns.process): ':fastdex'])
+
             // Write the manifest file
             def printer = new XmlNodePrinter(new PrintWriter(fastdexVariant.manifestPath, "utf-8"))
             printer.preserveWhitespace = true
             printer.print(xml)
         }
-        File manifestFile = new File(fastdexVariant.manifestPath)
+//        File manifestFile = new File(fastdexVariant.manifestPath)
 //        if (manifestFile.exists()) {
 //            File buildDir = FastdexUtils.getBuildDir(project,fastdexVariant.variantName)
 //            FileUtils.copyFileUsingStream(manifestFile, new File(buildDir,MANIFEST_XML))

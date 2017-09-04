@@ -202,9 +202,10 @@ public class FastdexPatchTask extends DefaultTask {
                 fastdexInstantRun.startBootActivity()
             }
             else {
+                println("==啊哈哈哈 " + !runtimeMetaInfo.active + "  " + result)
                 if (!runtimeMetaInfo.active || !result) {
                     killApp()
-                    startBootActivity()
+                    fastdexInstantRun.startBootActivity()
                 }
             }
             fastdexInstantRun.setInstallApk(false)

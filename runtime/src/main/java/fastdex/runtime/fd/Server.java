@@ -32,6 +32,7 @@ import static fastdex.common.fd.ProtocolConstants.UPDATE_MODE_WARM_SWAP;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
 import android.os.Handler;
@@ -581,7 +582,12 @@ public class Server {
             if (FileUtils.isLegalFile(file)) {
                 String resources = file.getAbsolutePath();
 
-                MonkeyPatcher.monkeyPatchExistingResources(context, resources, activities);
+                Intent intent = new Intent();
+                intent.addCategory(context.getPackageName());
+                intent.setAction("fastdex_monkey_patch_existing_resources");
+                intent.putExtra("resources",resources);
+                context.sendBroadcast(intent);
+                //MonkeyPatcher.monkeyPatchExistingResources(context, resources, activities);
             } else {
                 Log.e(Logging.LOG_TAG, "No resource file found to apply");
                 updateMode = UPDATE_MODE_COLD_SWAP;
