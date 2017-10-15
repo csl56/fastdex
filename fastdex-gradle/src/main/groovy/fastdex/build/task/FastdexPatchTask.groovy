@@ -146,7 +146,7 @@ public class FastdexPatchTask extends DefaultTask {
                 @Override
                 public Boolean communicate(DataInputStream input, DataOutputStream output) throws IOException {
                     output.writeInt(ProtocolConstants.MESSAGE_PATCHES)
-                    output.writeLong(0L)
+                    output.writeLong(ShareConstants.MESSAGE_TOKEN)
                     output.writeInt(changeCount)
 
                     if (sendResourcesApk) {

@@ -1,4 +1,4 @@
-package fastdex.runtime.fastdex;
+package fastdex.runtime;
 
 import android.util.Log;
 import org.json.JSONException;
@@ -34,6 +34,8 @@ public class RuntimeMetaInfo {
     private int patchDexVersion;
 
     private int resourcesVersion;
+
+    private boolean active = true;
 
     public long getBuildMillis() {
         return buildMillis;
@@ -107,6 +109,14 @@ public class RuntimeMetaInfo {
         this.resourcesVersion = resourcesVersion;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -127,10 +137,11 @@ public class RuntimeMetaInfo {
     }
 
     public void save(Fastdex fastdex) {
-        File metaInfoFile = new File(fastdex.fastdexDirectory, ShareConstants.META_INFO_FILENAME);
+        File metaInfoFile = new File(fastdex.getFastdexDirectory(), ShareConstants.META_INFO_FILENAME);
         try {
             JSONObject jObj = toJson();
 
+            Log.d(Logging.LOG_TAG,"save meta info: \n" + jObj.toString());
             FileOutputStream outputStream = null;
             FileUtils.ensumeDir(metaInfoFile.getParentFile());
             try {
@@ -170,7 +181,7 @@ public class RuntimeMetaInfo {
     }
 
     public static RuntimeMetaInfo load(Fastdex fastdex) {
-        File metaInfoFile = new File(fastdex.fastdexDirectory, ShareConstants.META_INFO_FILENAME);
+        File metaInfoFile = new File(fastdex.getFastdexDirectory(), ShareConstants.META_INFO_FILENAME);
         try {
             return RuntimeMetaInfo.parse(new String(FileUtils.readContents(metaInfoFile)));
             //return new Gson().fromJson(new String(FileUtils.readContents(metaInfoFile)),RuntimeMetaInfo.class);
