@@ -1,6 +1,6 @@
 rootProject.name = 'com.github.typ0520'
 
-include ':fastdex-common', ':runtime-test', ':app'
+include ':fastdex-common'
 include ':fastdex-gradle'
 include ':fastdex-build-lib'
 include ':fastdex-idea-plugin'
