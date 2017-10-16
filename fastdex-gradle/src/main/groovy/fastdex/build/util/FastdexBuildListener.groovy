@@ -194,7 +194,7 @@ class FastdexBuildListener implements TaskExecutionListener, BuildListener {
 
     public Map<String,String> getStudioInfo() {
         Map<String,String> map = new HashMap<>()
-        if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+        if (Os.isFamily(Os.FAMILY_MAC)) {
             try {
                 File script = new File(FastdexUtils.getBuildDir(project),String.format(Constants.STUDIO_INFO_SCRIPT_MACOS,Version.FASTDEX_BUILD_VERSION))
                 if (!FileUtils.isLegalFile(script)) {
