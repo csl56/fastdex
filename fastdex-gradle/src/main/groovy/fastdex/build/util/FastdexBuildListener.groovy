@@ -194,7 +194,7 @@ class FastdexBuildListener implements TaskExecutionListener, BuildListener {
 
     public Map<String,String> getStudioInfo() {
         Map<String,String> map = new HashMap<>()
-        if (Os.isFamily(Os.FAMILY_MAC)) {
+        if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
             try {
                 File script = new File(FastdexUtils.getBuildDir(project),String.format(Constants.STUDIO_INFO_SCRIPT_MACOS,Version.FASTDEX_BUILD_VERSION))
                 if (!FileUtils.isLegalFile(script)) {
@@ -206,23 +206,12 @@ class FastdexBuildListener implements TaskExecutionListener, BuildListener {
                     return map;
                 }
 
-                Process process = new ProcessBuilder("sh",script.getAbsolutePath(),"${pid}").start();
-                int status = process.waitFor();
-                if (status == 0) {
-                    byte[] bytes = FileUtils.readStream(process.getInputStream());
-                    String response = new String(bytes);
-                    BufferedReader reader = new BufferedReader(new StringReader(response));
-                    System.out.println();
-                    String line = null;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                        String[] arr = line.split("=");
-                        if (arr != null && arr.length == 2) {
-                            map.put(arr[0],arr[1]);
-                        }
-                    }
-                }
-                process.destroy();
+                List<String> cmdArgs = new ArrayList<>()
+                cmdArgs.add("sh")
+                cmdArgs.add(script.getAbsolutePath())
+                cmdArgs.add("${pid}")
+
+               FastdexUtils.runCommand(project,cmdArgs,true)
             } catch (Throwable e) {
                 //e.printStackTrace()
             }

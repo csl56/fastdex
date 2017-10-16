@@ -196,6 +196,7 @@ class FastdexPlugin implements Plugin<Project> {
                         customJavacTask.fastdexVariant = fastdexVariant
                         customJavacTask.javaCompile = javaCompile
                         customJavacTask.javacIncrementalSafeguard = getJavacIncrementalSafeguardTask(project, variantName)
+                        customJavacTask.javaPreCompile = getJavaPreCompileTask(project, variantName)
                         customJavacTask.dependsOn prepareTask
 
                         if (customJavacTask.javacIncrementalSafeguard != null) {
@@ -381,6 +382,15 @@ class FastdexPlugin implements Plugin<Project> {
 
     Task getJavacIncrementalSafeguardTask(Project project, String variantName) {
         String taskName = "incremental${variantName}JavaCompilationSafeguard"
+        try {
+            return  project.tasks.getByName(taskName)
+        } catch (Throwable e) {
+            return null
+        }
+    }
+
+    Task getJavaPreCompileTask(Project project, String variantName) {
+        String taskName = "javaPreCompile${variantName}"
         try {
             return  project.tasks.getByName(taskName)
         } catch (Throwable e) {
